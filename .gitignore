@@ -22,3 +22,28 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
+/.metadata/
+
+
+# Angular archivos innecesarios
+node_modules/
+dist/
+out-tsc/
+tmp/
+
+# Configuración de IDEs y caché
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Archivos de entorno
+*.env
+src/environments/environment.ts
+src/environments/environment.prod.ts
+
+# Dependencias y lock files
+package-lock.json
+yarn.lock
