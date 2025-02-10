@@ -1,4 +1,4 @@
-package com.proyecto.gestion;
+package com.proyecto.gestion.entidad;
 
 import java.util.List;
 
@@ -32,6 +32,6 @@ public class Categoria {
 	
 	
 	@OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL)
-	private List<Productos> productos;
+	private List<Producto> productos;
 	
 }

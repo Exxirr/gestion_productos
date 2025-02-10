@@ -1,4 +1,4 @@
-package com.proyecto.gestion;
+package com.proyecto.gestion.entidad;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,7 +18,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Productos {
+public class Producto {
 	
 	
 	@Id
