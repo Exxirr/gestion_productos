@@ -2,41 +2,43 @@ package com.proyecto.gestion.servicio.impl;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.proyecto.gestion.entidad.Producto;
+import com.proyecto.gestion.repositorio.ProductoRepositorio;
 import com.proyecto.gestion.servicio.ProductoServicio;
 
 @Service
 public class ProductoServicioImpl implements ProductoServicio {
+	
+	@Autowired
+	private ProductoRepositorio productoRepositorio;
+	
 
 	@Override
 	public List<Producto> listarProductos() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return (List<Producto>) productoRepositorio.findAll();
 	}
 
 	@Override
 	public Producto agregarProducto(Producto productoNuevo) {
-		// TODO Auto-generated method stub
-		return null;
+		return productoRepositorio.save(productoNuevo);
 	}
 
 	@Override
 	public Producto actualizarProducto(Producto productoActualizado) {
-		// TODO Auto-generated method stub
-		return null;
+		return productoRepositorio.save(productoActualizado);
 	}
 
 	@Override
 	public Producto buscarProductoPorId(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+		return productoRepositorio.findById(id).orElse(null);
 	}
 
 	@Override
 	public void eliminarProducto(Integer id) {
-		// TODO Auto-generated method stub
+		productoRepositorio.deleteById(id);
 		
 	}
 
