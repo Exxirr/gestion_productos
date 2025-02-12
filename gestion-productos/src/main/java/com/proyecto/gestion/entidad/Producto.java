@@ -1,5 +1,10 @@
 package com.proyecto.gestion.entidad;
 
+import java.io.Serializable;
+
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,7 +23,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Producto {
+public class Producto implements Serializable {
 	
 	
 	@Id
@@ -35,6 +40,7 @@ public class Producto {
 	@JoinColumn(
 				name = "categoria_id"
 			)
+	@JsonIgnoreProperties("productos") // Evita la recursión infinita pero permite la serialización
 	private Categoria categoria;
 	
 }

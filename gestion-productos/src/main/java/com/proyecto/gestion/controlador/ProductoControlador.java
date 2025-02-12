@@ -34,6 +34,14 @@ public class ProductoControlador {
 		return productoServicio.listarProductos();
 	}
 	
+	//Listar Id
+	@GetMapping("producto/{id}")
+	public List<Producto> todosProductosId(@PathVariable Integer id){
+		
+		return (List<Producto>) productoServicio.buscarProductoPorId(id);
+		
+	}
+	
 	
 	//Agregar
 	@PostMapping("producto")
@@ -42,6 +50,8 @@ public class ProductoControlador {
 		return productoServicio.agregarProducto(producto);
 		
 	}
+	
+	
 	
 	
 	//Actualizar

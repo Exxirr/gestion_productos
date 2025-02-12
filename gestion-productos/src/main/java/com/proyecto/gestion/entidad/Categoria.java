@@ -1,6 +1,11 @@
 package com.proyecto.gestion.entidad;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -21,7 +26,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Categoria {
+public class Categoria implements Serializable {
 
 	
 	@Id
@@ -31,7 +36,8 @@ public class Categoria {
 	private String nombre_cat;
 	
 	
-	@OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL)
-	private List<Producto> productos;
+	@OneToMany(mappedBy = "categoria")
+	@JsonIgnoreProperties("categoria")  // Evita la recursión infinita
+	private List<Producto> productos = new ArrayList<>();
 	
 }
