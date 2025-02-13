@@ -42,6 +42,11 @@ public class ProductoServicioImpl implements ProductoServicio {
 	@Override
 	@Transactional
 	public Producto actualizarProducto(Producto productoActualizado) {
+		
+		Categoria categoriaExistente = categoriaRepositorio.findById(productoActualizado.getCategoria().getId()).orElse(null);
+		
+		productoActualizado.setCategoria(categoriaExistente);
+			
 		return productoRepositorio.save(productoActualizado);
 	}
 
