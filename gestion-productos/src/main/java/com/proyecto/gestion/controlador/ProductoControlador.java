@@ -1,6 +1,7 @@
 package com.proyecto.gestion.controlador;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.proyecto.gestion.entidad.Producto;
@@ -9,6 +10,7 @@ import com.proyecto.gestion.servicio.ProductoServicio;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +30,7 @@ public class ProductoControlador {
 	
 	//Lista
 	@GetMapping("producto")
+	@ResponseStatus(HttpStatus.OK)
 	public List<Producto> todosProductos(  ) {
 		
 		
@@ -36,6 +39,7 @@ public class ProductoControlador {
 	
 	//Listar Id
 	@GetMapping("producto/{id}")
+	@ResponseStatus(HttpStatus.OK)
 	public List<Producto> todosProductosId(@PathVariable Integer id){
 		
 		return (List<Producto>) productoServicio.buscarProductoPorId(id);
@@ -45,6 +49,7 @@ public class ProductoControlador {
 	
 	//Agregar
 	@PostMapping("producto")
+	@ResponseStatus(HttpStatus.CREATED)
 	public Producto nuevoProducto(@RequestBody Producto producto) {
 		
 		return productoServicio.agregarProducto(producto);
@@ -56,6 +61,7 @@ public class ProductoControlador {
 	
 	//Actualizar
 	@PutMapping("producto/{id}")
+	@ResponseStatus(HttpStatus.CREATED)
 	public Producto actualizarProducto(@PathVariable Integer id, @RequestBody Producto productoActualizado) {
 		
 		Producto productoExistente = productoServicio.buscarProductoPorId(id);
@@ -78,6 +84,7 @@ public class ProductoControlador {
 	
 	//Eliminar
 	@DeleteMapping("producto/{id}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void eliminarProducto(@PathVariable Integer id) {
 		
 		productoServicio.eliminarProducto(id);

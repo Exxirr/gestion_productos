@@ -58,7 +58,7 @@ public class ProductoServicioImpl implements ProductoServicio {
 
 	@Override
 	@Transactional
-	public void eliminarProducto(Integer id) {
+	public void eliminarProducto(Integer id) {	
 		productoRepositorio.deleteById(id);
 		
 	}
