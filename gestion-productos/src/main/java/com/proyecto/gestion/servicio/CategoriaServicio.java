@@ -2,6 +2,7 @@ package com.proyecto.gestion.servicio;
 
 import java.util.List;
 
+import com.proyecto.gestion.dto.CategoriaDTO;
 import com.proyecto.gestion.entidad.Categoria;
 
 public interface CategoriaServicio {
@@ -10,7 +11,7 @@ public interface CategoriaServicio {
 	List<Categoria> listarCategorias();
 	
 	//Agregar
-	Categoria agregarCategoria(Categoria categoriaNueva);
+	Categoria agregarCategoria(CategoriaDTO categoriaNueva);
 	
 	
 	//Eliminar

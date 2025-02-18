@@ -1,6 +1,14 @@
 package com.proyecto.gestion.dto;
 
 
+
+import lombok.Builder;
+import lombok.Data;
+import lombok.ToString;
+
+@Data
+@ToString
+@Builder //Ayuda a la creacion de objetos con mejor flexibilidad y legibilidad al codigo. 
 public class ProductoDTO {
 
 	
