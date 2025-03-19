@@ -45,4 +45,10 @@ public class CategoriaServicioImpl implements CategoriaServicio {
 		categoriaRepositorio.deleteById(id);
 	}
 
+	@Override
+	public Categoria categoriaPorId(Integer id) {
+		// TODO Auto-generated method stub
+		return categoriaRepositorio.findById(id).orElse(null);
+	}
+
 }

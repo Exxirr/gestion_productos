@@ -14,8 +14,13 @@ public interface CategoriaServicio {
 	Categoria agregarCategoria(CategoriaDTO categoriaNueva);
 	
 	
+	Categoria categoriaPorId(Integer id);
+	
+	
 	//Eliminar
 	void eliminarCategoria(Integer id);
+	
+	
 	
 	
 }

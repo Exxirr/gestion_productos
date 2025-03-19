@@ -5,13 +5,18 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.proyecto.gestion.dto.ProductoDTO;
+import com.proyecto.gestion.entidad.Categoria;
 import com.proyecto.gestion.entidad.Producto;
-import com.proyecto.gestion.repositorio.ProductoRepositorio;
+
+import com.proyecto.gestion.servicio.CategoriaServicio;
 import com.proyecto.gestion.servicio.ProductoServicio;
+
+import lombok.RequiredArgsConstructor;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -24,31 +29,62 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
-
 @RestController
 @RequestMapping("/api/v1/")
+@RequiredArgsConstructor // Agrega los constructores necesario para la inyeccion de depedencias
 public class ProductoControlador {
 
-
-	@Autowired
-	private ProductoServicio productoServicio;
+	
+	//Inyeccion de Dependencias
+	private final ProductoServicio productoServicio;
+	
+	private final CategoriaServicio categoriaServicio;
+	
 	
 	//Lista
 	@GetMapping("producto")
 	@ResponseStatus(HttpStatus.OK)
-	public List<Producto> todosProductos(  ) {
+	public List<ProductoDTO> todosProductos(  ) {
 		
+		List<Producto> productos =  productoServicio.listarProductos();
 		
-		return productoServicio.listarProductos();
+		return productos.stream().map(producto -> ProductoDTO.builder()
+				.id(producto.getId())
+				.nombre_prod(producto.getNombre_prod())
+				.precio_unitario(producto.getPrecio_unitario())
+				.cantidad(producto.getCantidad())
+				.idCategoria(producto.getCategoria() != null ? producto.getCategoria().getId() : null)
+				.build())
+				.collect(Collectors.toList());
+			
 	}
 	
 	//Listar Id
 	@GetMapping("producto/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	public ProductoDTO todosProductosId(@PathVariable Integer id){
+	public ResponseEntity<?> todosProductosId(@PathVariable Integer id){
 		
-		return (List<Producto>) productoServicio.buscarProductoPorId(id);
+		Map<String, Object> response = new HashMap<>();
+		
+		if(!productoServicio.existePorId(id)) {
+			
+			response.put("mensaje", "El producto con ID " + id + " no se encuentra en la Base de Datos");	
+			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);		
+		}
+		
+		Producto producto =  productoServicio.buscarProductoPorId(id);
+		
+		
+		 
+		ProductoDTO productoDto =  ProductoDTO.builder()
+			.id(producto.getId() != null ? producto.getId() : null)
+			.nombre_prod(producto.getNombre_prod())
+			.precio_unitario(producto.getPrecio_unitario())
+			.cantidad(producto.getCantidad())
+			.idCategoria(producto.getCategoria().getId())
+			.build();
+		 
+		  return  ResponseEntity.ok(productoDto);
 		
 	}
 	
@@ -56,35 +92,40 @@ public class ProductoControlador {
 	//Agregar
 	@PostMapping("producto")
 	@ResponseStatus(HttpStatus.CREATED)
-	public Producto nuevoProducto(@RequestBody ProductoDTO producto) {
+	public Producto nuevoProducto(@RequestBody ProductoDTO productoDto) {
 		
-		return productoServicio.agregarProducto(producto);
+		Producto productoSave = productoServicio.agregarProducto(productoDto);
 		
+		Categoria categoria = categoriaServicio.categoriaPorId(productoDto.getIdCategoria());
+		
+		return  Producto.builder()
+		.id(productoSave.getId())
+		.nombre_prod(productoSave.getNombre_prod())
+		.precio_unitario(productoSave.getPrecio_unitario())
+		.cantidad(productoSave.getCantidad())
+		.categoria(categoria)
+		.build();
 	}
 	
 	
 	
 	
-	//Actualizar
+	//Actualizar 
 	@PutMapping("producto/{id}")
 	@ResponseStatus(HttpStatus.CREATED)
 	public Producto actualizarProducto(@PathVariable Integer id, @RequestBody ProductoDTO productoActualizado) {
 		
-		ProductoDTO productoExistente = productoServicio.buscarProductoPorId(id);
+		Producto productoSave = productoServicio.actualizarProducto(productoActualizado);
 		
-		if(productoExistente != null) {
-			
-			productoExistente.setId(id);
-			productoExistente.setNombre_prod(productoActualizado.getNombre_prod());
-			productoExistente.setPrecio_unitario(productoActualizado.getPrecio_unitario());
-			productoExistente.setCantidad(productoActualizado.getCantidad());
-			productoExistente.setIdCategoria(id);
-		}
+		Categoria categoria = categoriaServicio.categoriaPorId(productoActualizado.getIdCategoria()); //null
 		
-		
-		return productoServicio.actualizarProducto(productoExistente);
-		
-		
+		return  Producto.builder()
+		.id(productoSave.getId())
+		.nombre_prod(productoSave.getNombre_prod())
+		.precio_unitario(productoSave.getPrecio_unitario())
+		.cantidad(productoSave.getCantidad())
+		.categoria(categoria)
+		.build();
 	}
 	
 	
