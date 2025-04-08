@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.proyecto.gestion.dto.CategoriaDTO;
-import com.proyecto.gestion.entidad.Categoria;
-import com.proyecto.gestion.repositorio.CategoriaRepositorio;
+import com.proyecto.gestion.model.dto.*;
+import com.proyecto.gestion.model.entidad.Categoria;
+import com.proyecto.gestion.model.dao.*;
 import com.proyecto.gestion.servicio.CategoriaServicio;
 
 @Service
@@ -49,6 +49,12 @@ public class CategoriaServicioImpl implements CategoriaServicio {
 	public Categoria categoriaPorId(Integer id) {
 		// TODO Auto-generated method stub
 		return categoriaRepositorio.findById(id).orElse(null);
+	}
+
+	@Override
+	public boolean existePorId(Integer id) {
+		// TODO Auto-generated method stub
+		return categoriaRepositorio.existsById(id);
 	}
 
 }

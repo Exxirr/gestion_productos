@@ -2,8 +2,8 @@ package com.proyecto.gestion.servicio;
 
 import java.util.List;
 
-import com.proyecto.gestion.dto.ProductoDTO;
-import com.proyecto.gestion.entidad.Producto;
+import com.proyecto.gestion.model.dto.*;
+import com.proyecto.gestion.model.entidad.Producto;
 
 
 

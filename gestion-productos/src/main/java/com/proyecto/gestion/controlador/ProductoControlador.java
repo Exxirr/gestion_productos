@@ -4,21 +4,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.proyecto.gestion.dto.ProductoDTO;
-import com.proyecto.gestion.entidad.Categoria;
-import com.proyecto.gestion.entidad.Producto;
-
+import com.proyecto.gestion.model.dto.*;
+import com.proyecto.gestion.model.entidad.Categoria;
+import com.proyecto.gestion.model.entidad.Producto;
+import com.proyecto.gestion.model.payload.MensajeResponse;
 import com.proyecto.gestion.servicio.CategoriaServicio;
 import com.proyecto.gestion.servicio.ProductoServicio;
 
 import lombok.RequiredArgsConstructor;
-
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +38,7 @@ public class ProductoControlador {
 	private final CategoriaServicio categoriaServicio;
 	
 	
-	//Lista
+	//Listar STREAM PRACTICAR
 	@GetMapping("producto")
 	@ResponseStatus(HttpStatus.OK)
 	public List<ProductoDTO> todosProductos(  ) {
@@ -61,22 +58,23 @@ public class ProductoControlador {
 	
 	//Listar Id
 	@GetMapping("producto/{id}")
-	@ResponseStatus(HttpStatus.OK)
+
 	public ResponseEntity<?> todosProductosId(@PathVariable Integer id){
 		
-		Map<String, Object> response = new HashMap<>();
 		
 		if(!productoServicio.existePorId(id)) {
-			
-			response.put("mensaje", "El producto con ID " + id + " no se encuentra en la Base de Datos");	
-			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);		
+			return new ResponseEntity<>(MensajeResponse.builder()
+					.mensaje("El producto con ID " + id + " no se encuentra en la Base de Datos")
+					.object(null)
+					.build(),
+					HttpStatus.NOT_FOUND);		
 		}
 		
 		Producto producto =  productoServicio.buscarProductoPorId(id);
 		
 		
 		 
-		ProductoDTO productoDto =  ProductoDTO.builder()
+			ProductoDTO productoDto =  ProductoDTO.builder()
 			.id(producto.getId() != null ? producto.getId() : null)
 			.nombre_prod(producto.getNombre_prod())
 			.precio_unitario(producto.getPrecio_unitario())
@@ -84,27 +82,56 @@ public class ProductoControlador {
 			.idCategoria(producto.getCategoria().getId())
 			.build();
 		 
-		  return  ResponseEntity.ok(productoDto);
+		  return new ResponseEntity<>(MensajeResponse.builder()
+				  .mensaje("Consulta Exitosa")
+				  .object(productoDto)
+				  .build(), 
+				  HttpStatus.OK);
 		
 	}
 	
 	
 	//Agregar
 	@PostMapping("producto")
-	@ResponseStatus(HttpStatus.CREATED)
-	public Producto nuevoProducto(@RequestBody ProductoDTO productoDto) {
+
+	public ResponseEntity<?> nuevoProducto(@RequestBody ProductoDTO productoDto) {
 		
-		Producto productoSave = productoServicio.agregarProducto(productoDto);
+				Producto productoSave = null;
+				
+				Categoria categoria = null;
 		
-		Categoria categoria = categoriaServicio.categoriaPorId(productoDto.getIdCategoria());
-		
-		return  Producto.builder()
-		.id(productoSave.getId())
-		.nombre_prod(productoSave.getNombre_prod())
-		.precio_unitario(productoSave.getPrecio_unitario())
-		.cantidad(productoSave.getCantidad())
-		.categoria(categoria)
-		.build();
+		try {
+			
+			 categoria = categoriaServicio.categoriaPorId(productoDto.getIdCategoria()); 
+			
+			 productoSave = productoServicio.actualizarProducto(productoDto);
+			
+			
+				
+				Producto producto =  Producto.builder()
+						.id(productoSave.getId())
+						.nombre_prod(productoSave.getNombre_prod())
+						.precio_unitario(productoSave.getPrecio_unitario())
+						.cantidad(productoSave.getCantidad())
+						.categoria(categoria)
+						.build();
+						
+						return new ResponseEntity<>(MensajeResponse.builder()
+								.mensaje("Producto Agregado")
+								.object(producto)
+								.build(), 
+				
+								HttpStatus.CREATED);
+			
+
+		}catch(DataAccessException exDt) {
+			
+			return new ResponseEntity<>(MensajeResponse.builder()
+					.mensaje(null)
+					.object(null)
+					.build(), 
+					HttpStatus.INTERNAL_SERVER_ERROR);		
+		}
 	}
 	
 	
@@ -112,20 +139,53 @@ public class ProductoControlador {
 	
 	//Actualizar 
 	@PutMapping("producto/{id}")
-	@ResponseStatus(HttpStatus.CREATED)
-	public Producto actualizarProducto(@PathVariable Integer id, @RequestBody ProductoDTO productoActualizado) {
+
+	public ResponseEntity<?> actualizarProducto(@PathVariable Integer id, @RequestBody ProductoDTO productoActualizado) {
 		
-		Producto productoSave = productoServicio.actualizarProducto(productoActualizado);
+		Producto productoUpdate = null;
 		
-		Categoria categoria = categoriaServicio.categoriaPorId(productoActualizado.getIdCategoria()); //null
+		Categoria categoria = null;
 		
-		return  Producto.builder()
-		.id(productoSave.getId())
-		.nombre_prod(productoSave.getNombre_prod())
-		.precio_unitario(productoSave.getPrecio_unitario())
-		.cantidad(productoSave.getCantidad())
-		.categoria(categoria)
-		.build();
+		try {
+			
+			 categoria = categoriaServicio.categoriaPorId(productoActualizado.getIdCategoria()); 
+			
+			 productoUpdate = productoServicio.actualizarProducto(productoActualizado);
+			
+			if(productoServicio.existePorId(id) || categoriaServicio.existePorId(id)) {
+				
+				Producto producto =  Producto.builder()
+						.id(productoUpdate.getId())
+						.nombre_prod(productoUpdate.getNombre_prod())
+						.precio_unitario(productoUpdate.getPrecio_unitario())
+						.cantidad(productoUpdate.getCantidad())
+						.categoria(categoria)
+						.build();
+						
+						return new ResponseEntity<>(MensajeResponse.builder()
+								.mensaje("Producto Actualizado correctamente")
+								.object(producto)
+								.build(), 
+				
+								HttpStatus.CREATED);
+			}
+			
+			return new ResponseEntity<>(MensajeResponse.builder()
+					.mensaje("El producto o categoria no existe")
+					.object(null)
+					.build(), 
+					HttpStatus.NOT_FOUND);		
+			
+			
+			
+		}catch(DataAccessException exDt) {
+			
+			return new ResponseEntity<>(MensajeResponse.builder()
+					.mensaje(null)
+					.object(null)
+					.build(), 
+					HttpStatus.INTERNAL_SERVER_ERROR);		
+		}
 	}
 	
 	
@@ -133,30 +193,37 @@ public class ProductoControlador {
 	@DeleteMapping("producto/{id}")
 	public ResponseEntity<?> eliminarProducto(@PathVariable Integer id) {
 		
-		Map<String, Object> response = new HashMap<>();
-		
 		try {
 				
 		if(!productoServicio.existePorId(id)) {
-			
-			response.put("mensaje", "El producto con ID " + id + " no existe.");	
-			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);		
+				
+			return new ResponseEntity<>(MensajeResponse.builder()
+										.mensaje("El producto a eliminar no existe")
+										.object(null)
+										.build(), 
+										HttpStatus.NOT_FOUND);		
 		}
 		
 		//Elimina por Id
+		
 		productoServicio.eliminarProducto(id);
 		
-		response.put("mensaje", "Producto eliminado");
-		return new ResponseEntity<>(response, HttpStatus.OK);
+		return new ResponseEntity<>(MensajeResponse.builder()
+				.mensaje("Producto Eliminado")
+				.object(null)
+				.build(), 
+				HttpStatus.OK);	
 		
 		
 		}catch(DataAccessException exDt) {
 			
-			response.put("mensaje", exDt.getMessage());
 			
-			response.put("producto", null);
 			
-			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(MensajeResponse.builder()
+					.mensaje(exDt.getMessage())
+					.object(null)
+					.build(), 
+					HttpStatus.INTERNAL_SERVER_ERROR);	
 		}	
 	}
 }

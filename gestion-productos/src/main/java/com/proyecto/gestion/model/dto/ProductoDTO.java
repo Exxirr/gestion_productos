@@ -1,4 +1,4 @@
-package com.proyecto.gestion.dto;
+package com.proyecto.gestion.model.dto;
 
 
 

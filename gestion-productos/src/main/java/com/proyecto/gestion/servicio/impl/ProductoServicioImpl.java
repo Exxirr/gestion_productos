@@ -5,11 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.proyecto.gestion.dto.ProductoDTO;
-import com.proyecto.gestion.entidad.Categoria;
-import com.proyecto.gestion.entidad.Producto;
-import com.proyecto.gestion.repositorio.CategoriaRepositorio;
-import com.proyecto.gestion.repositorio.ProductoRepositorio;
+import com.proyecto.gestion.model.dto.*;
+import com.proyecto.gestion.model.entidad.Categoria;
+import com.proyecto.gestion.model.entidad.Producto;
+import com.proyecto.gestion.model.dao.*;
 import com.proyecto.gestion.servicio.ProductoServicio;
 
 @Service
