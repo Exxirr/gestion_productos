@@ -1,4 +1,5 @@
 Mini Proyecto: Gestión de Productos y Categorías con Angular y Spring Boot
+
 Descripción:
 Este proyecto tiene como objetivo consolidar mis conocimientos en el desarrollo de aplicaciones web utilizando Angular para el frontend y Spring Boot para el backend, creando una aplicación funcional de gestión de productos y categorías.
 
