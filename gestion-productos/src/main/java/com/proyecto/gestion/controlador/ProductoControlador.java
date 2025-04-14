@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@CrossOrigin(origins = "http://localhost:55101")
+@CrossOrigin(origins = "http://localhost:4200/")
 @RestController
 @RequestMapping("/api/v1/")
 @RequiredArgsConstructor // Agrega los constructores necesario para la inyeccion de depedencias
@@ -46,7 +46,7 @@ public class ProductoControlador {
 	public List<ProductoDTO> todosProductos(  ) {
 		
 		List<Producto> productos =  productoServicio.listarProductos();
-		
+	
 		return productos.stream().map(producto -> ProductoDTO.builder()
 				.id(producto.getId())
 				.nombre_prod(producto.getNombre_prod())
@@ -94,47 +94,47 @@ public class ProductoControlador {
 	
 	
 	//Agregar
-	@PostMapping("producto")
-
-	public ResponseEntity<?> nuevoProducto(@RequestBody ProductoDTO productoDto) {
-		
-				Producto productoSave = null;
+		@PostMapping("producto")
+	
+		public ResponseEntity<?> nuevoProducto(@RequestBody ProductoDTO productoDto) {
+			
+					Producto productoSave = null;
+					
+					Categoria categoria = null;
+			
+			try {
 				
-				Categoria categoria = null;
-		
-		try {
-			
-			 categoria = categoriaServicio.categoriaPorId(productoDto.getIdCategoria()); 
-			
-			 productoSave = productoServicio.actualizarProducto(productoDto);
-			
-			
+				 categoria = categoriaServicio.categoriaPorId(productoDto.getIdCategoria()); 
 				
-				Producto producto =  Producto.builder()
-						.id(productoSave.getId())
-						.nombre_prod(productoSave.getNombre_prod())
-						.precio_unitario(productoSave.getPrecio_unitario())
-						.cantidad(productoSave.getCantidad())
-						.categoria(categoria)
-						.build();
-						
-						return new ResponseEntity<>(MensajeResponse.builder()
-								.mensaje("Producto Agregado")
-								.object(producto)
-								.build(), 
+				 productoSave = productoServicio.agregarProducto(productoDto);
 				
-								HttpStatus.CREATED);
-			
-
-		}catch(DataAccessException exDt) {
-			
-			return new ResponseEntity<>(MensajeResponse.builder()
-					.mensaje(null)
-					.object(null)
-					.build(), 
-					HttpStatus.INTERNAL_SERVER_ERROR);		
+				
+					
+					Producto producto =  Producto.builder()
+							.id(productoSave.getId())
+							.nombre_prod(productoSave.getNombre_prod())
+							.precio_unitario(productoSave.getPrecio_unitario())
+							.cantidad(productoSave.getCantidad())
+							.categoria(categoria)
+							.build();
+							
+							return new ResponseEntity<>(MensajeResponse.builder()
+									.mensaje("Producto Agregado")
+									.object(producto)
+									.build(), 
+					
+									HttpStatus.CREATED);
+				
+	
+			}catch(DataAccessException exDt) {
+				
+				return new ResponseEntity<>(MensajeResponse.builder()
+						.mensaje(exDt.getMessage())
+						.object(null)
+						.build(), 
+						HttpStatus.INTERNAL_SERVER_ERROR);		
+			}
 		}
-	}
 	
 	
 	

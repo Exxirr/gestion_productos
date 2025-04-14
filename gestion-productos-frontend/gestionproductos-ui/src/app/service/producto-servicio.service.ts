@@ -13,14 +13,16 @@ export class ProductoService {
 
   constructor(private http: HttpClient) { }
 
+  //Listar Productos
+   getProductosList():Observable<Producto []> {
 
-   getProductosList() : Observable<Producto []> {
-
-      return this.http.get<Producto []>(
-        this.api
-      );
-
+      return this.http.get<Producto []>(this.api);
    }
 
+   crearProducto(producto : Producto):Observable<Producto> {
+
+      return this.http.post<Producto>(this.api, producto);
+
+   }
 
 }
