@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Producto } from '../../model/producto';
 import { ProductoService } from '../../service/producto-servicio.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-productos',
@@ -11,7 +12,7 @@ export class ProductosComponent implements OnInit {
   
   productos : Producto [] = [];
 
-  constructor(private productoService : ProductoService){
+  constructor(private productoService : ProductoService, private router : Router){
 
   }
 
@@ -34,6 +35,21 @@ export class ProductosComponent implements OnInit {
   }
 
 
-    
+  eliminarProducto(id : number){
+
+    this.productoService.deleteByIdProduct(id).subscribe(
+
+      () => this.listaProductos()
+
+    );
+
+   
+
+  }
+
+
+  actualizarProducto(id : number){
+    this.router.navigate(['actualizar-productos', id]);
+ }
 
 }

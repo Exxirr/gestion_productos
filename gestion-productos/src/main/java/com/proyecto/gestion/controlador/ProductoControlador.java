@@ -154,7 +154,7 @@ public class ProductoControlador {
 			
 			 productoUpdate = productoServicio.actualizarProducto(productoActualizado);
 			
-			if(productoServicio.existePorId(id) || categoriaServicio.existePorId(id)) {
+			if(productoServicio.existePorId(id) || categoriaServicio.existePorId(productoActualizado.getIdCategoria())) {
 				
 				Producto producto =  Producto.builder()
 						.id(productoUpdate.getId())
@@ -183,7 +183,7 @@ public class ProductoControlador {
 		}catch(DataAccessException exDt) {
 			
 			return new ResponseEntity<>(MensajeResponse.builder()
-					.mensaje(null)
+					.mensaje(exDt.getMessage())
 					.object(null)
 					.build(), 
 					HttpStatus.INTERNAL_SERVER_ERROR);		

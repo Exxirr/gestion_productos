@@ -7,12 +7,17 @@ import { CategoriasComponent } from './categorias/categorias.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ProductoCrearComponent } from './productos/producto-crear/producto-crear.component';
 import { FormsModule } from '@angular/forms'; 
+import { DefaultComponent } from './default/default.component';
+import { ProductoActualizarComponent } from './productos/producto-actualizar/producto-actualizar.component';
 
 @NgModule({
   declarations: [
     ProductosComponent,
     CategoriasComponent,
-    ProductoCrearComponent
+    ProductoCrearComponent,
+    DefaultComponent,
+    ProductoActualizarComponent,
+   
   ],
   imports: [
     BrowserModule,
@@ -21,6 +26,6 @@ import { FormsModule } from '@angular/forms';
     FormsModule
   ],
   providers: [],
-  bootstrap: [ProductoCrearComponent]
+  bootstrap: [DefaultComponent]
 })
 export class AppModule { }

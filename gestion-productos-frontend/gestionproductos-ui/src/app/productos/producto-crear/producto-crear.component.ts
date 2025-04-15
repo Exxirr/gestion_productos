@@ -30,14 +30,22 @@ export class ProductoCrearComponent implements OnInit {
 
   crearProducto(){
   
-    let producto = new Producto(this.id, this.nombre_prod, this.precio_unitario, this.cantidad, this.idCategoria);
+    let producto = new Producto(this.nombre_prod, this.precio_unitario, this.cantidad, this.idCategoria);
     
     console.log(producto);
 
-    this.productoService.crearProducto(producto).subscribe(
+    this.productoService.saveProduct(producto).subscribe(
 
       data => console.log(data)
 
     );
   }   
+
+
+  
+
+
+
+
+
 }

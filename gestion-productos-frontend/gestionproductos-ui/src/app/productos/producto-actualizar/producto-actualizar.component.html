@@ -1,0 +1,31 @@
+<div class="container">
+    <h1>Actualizar Producto</h1>
+  
+    <form #formProducto="ngForm" (ngSubmit)="actualizarProducto()">
+      <input type="hidden" [(ngModel)]="producto.id" name="id">
+      
+      <div class="mb-3">
+        <label for="nombre_prod" class="form-label">Nombre Producto</label>
+        <input [(ngModel)]="producto.nombre_prod" type="text" class="form-control" id="nombre_prod" name="nombre_prod">
+      </div>
+  
+      <div class="mb-3">
+        <label for="precio_unitario" class="form-label">Precio Unitario</label>
+        <input [(ngModel)]="producto.precio_unitario" type="number" step="0.01" class="form-control" id="precio_unitario" name="precio_unitario">
+      </div>
+  
+      <div class="mb-3">
+        <label for="cantidad" class="form-label">Cantidad</label>
+        <input [(ngModel)]="producto.cantidad" type="number" class="form-control" id="cantidad" name="cantidad">
+      </div>
+  
+      <div class="mb-3">
+        <label for="idCategoria" class="form-label">Id Categoria</label>
+        <input [(ngModel)]="producto.idCategoria" type="number" class="form-control" id="idCategoria" name="idCategoria">
+      </div>
+  
+      <button type="submit" class="btn btn-primary" [disabled]="!formProducto.valid">Actualizar</button>
+      <button type="button" class="btn btn-light" routerLink="">Regresar</button>
+    </form>
+  </div>
+  

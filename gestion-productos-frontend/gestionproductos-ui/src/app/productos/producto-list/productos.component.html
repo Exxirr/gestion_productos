@@ -1,26 +1,32 @@
-
+<router-outlet></router-outlet>
 
 <div class="container">
-        <h1>Listado de Productos</h1>
+  <h1>Listado de Productos</h1>
 
-        <table class="table">
-            <thead>
-              <tr>
-                <th scope="col">Id Producto</th>
-                <th scope="col">Nombre Producto</th>
-                <th scope="col">Precio Unitario</th>
-                <th scope="col">Cantidad</th>
-                <th scope="col">Id Categoria</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor = "let p of productos">
-                <th scope="row">{{p.id}}</th>
-                <td>{{p.nombre_prod}}</td>
-                <td>{{p.precio_unitario}}</td>
-                <td>{{p.cantidad}}</td>
-                <td>{{p.idCategoria}}</td>
-              </tr>
-            </tbody>
-          </table>
+  <a class="btn btn-primary" routerLink="/productos/crear">Crear Producto</a>
+
+  <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Id Producto</th>
+          <th scope="col">Nombre Producto</th>
+          <th scope="col">Precio Unitario</th>
+          <th scope="col">Cantidad</th>
+          <th scope="col">Id Categoria</th>
+          <th scope="col">Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor = "let p of productos">
+          <th scope="row">{{p.id}}</th>
+          <td>{{p.nombre_prod}}</td>
+          <td>{{p.precio_unitario}}</td>
+          <td>{{p.cantidad}}</td>
+          <td>{{p.idCategoria}}</td>
+          <td> <button class="btn btn-warning" (click)="(p.id !== undefined && actualizarProducto(p.id))">Actualizar</button> </td>
+          <td> <button class="btn btn-danger" (click)="(p.id !== undefined &&  eliminarProducto(p.id))">Eliminar</button> </td>
+        </tr>
+      </tbody>
+    </table>
 </div>
+
