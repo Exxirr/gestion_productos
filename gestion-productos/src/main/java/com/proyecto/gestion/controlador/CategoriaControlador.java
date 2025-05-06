@@ -5,13 +5,14 @@ import java.util.stream.Collectors;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.proyecto.gestion.model.dto.CategoriaDTO;
@@ -29,29 +30,57 @@ public class CategoriaControlador {
 
 	private final CategoriaServicio categoriaServicio;
 	
-	@GetMapping("categorias")
-	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<?> todasCategoria(){
+	
+	@GetMapping("categoria")
+	public ResponseEntity<List<CategoriaDTO>> todasCategoria() {
 		
-		List<Categoria> categorias =  categoriaServicio.listarCategorias();
 		
-		List<CategoriaDTO> categoriasLista = categorias.stream().map(categoria -> CategoriaDTO.builder()
-				.id(categoria.getId())
-				.nombre_cat(categoria.getNombre_cat())
-				.build())
-				.collect(Collectors.toList());
+	    List<CategoriaDTO> categoriasLista = categoriaServicio.listarCategorias().stream()
+	        .map(categoria -> CategoriaDTO.builder()
+	            .id(categoria.getId())
+	            .nombre_cat(categoria.getNombre_cat())
+	            .build())
+	        .collect(Collectors.toList());
+
+	    return ResponseEntity.ok(categoriasLista);
+	}
+	
+	
+	
+	@GetMapping("categoria/{id}")
+	public ResponseEntity<?> todosProductosId(@PathVariable Integer id){
+		
+			if(!categoriaServicio.existePorId(id)) {
 				
-			return new ResponseEntity<>(MensajeResponse.builder()
-					.mensaje("Consulta Exitosa")
-					.object(categoriasLista)
-					.build(), 
-					HttpStatus.OK);
-		}
+				return new ResponseEntity<>(MensajeResponse.builder()
+						.mensaje("La categoria con ID " + id + " no se encuentra en la Base de Datos")
+						.object(null)
+						.build(),
+						HttpStatus.NOT_FOUND);		
+			}
+		
+		Categoria categoria = categoriaServicio.categoriaPorId(id);
+		
+		CategoriaDTO categoriaDTO = CategoriaDTO.builder()
+				.id(categoria.getId() != null ? categoria.getId() : null)
+				.nombre_cat(categoria.getNombre_cat())
+				.build();
+		
+		
+		 return new ResponseEntity<>(MensajeResponse.builder()
+				  .mensaje("Consulta Exitosa")
+				  .object(categoriaDTO)
+				  .build(), 
+				  HttpStatus.OK);
+			
+		
+	}
 	
 	
+	
+
 	
 	@PostMapping("categoria")
-	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> agregarCategoria(@RequestBody CategoriaDTO categoriaDto) {
 		
 		
@@ -85,8 +114,56 @@ public class CategoriaControlador {
 		}	
 	}
 	
+	
+	@PutMapping("categoria/{id}")
+	public ResponseEntity<?> actualizarCategoria(@PathVariable Integer id,  @RequestBody CategoriaDTO categoriaDto) {
+		
+		
+		Categoria categoriaUpdate = null;
+		
+		
+		try {
+		
+			
+			categoriaUpdate = categoriaServicio.actualizarCategoria(categoriaDto);
+			
+		
+				if(categoriaServicio.existePorId(id)) {
+					
+					
+					Categoria categoria = Categoria.builder()
+							.id(categoriaUpdate.getId())
+							.nombre_cat(categoriaUpdate.getNombre_cat())
+							.build();
+					
+					return new ResponseEntity<>(MensajeResponse.builder()
+							.mensaje("Producto Actualizado correctamente")
+							.object(categoria)
+							.build(), 
+			
+							HttpStatus.CREATED);
+				}
+			
+				return new ResponseEntity<>(MensajeResponse.builder()
+						.mensaje("La categoria no existe")
+						.object(null)
+						.build(), 
+						HttpStatus.NOT_FOUND);	
+			
+			
+		}catch(DataAccessException exDt) {
+		
+			return new ResponseEntity<>(MensajeResponse.builder()
+					.mensaje(exDt.getMessage())
+					.object(null)
+					.build(), 
+					HttpStatus.INTERNAL_SERVER_ERROR);
+			
+		}	
+	}
+	
+	
 	@DeleteMapping("categoria/{id}")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public ResponseEntity<?> eliminarCategoria(@PathVariable Integer id) {
 		
 		try {

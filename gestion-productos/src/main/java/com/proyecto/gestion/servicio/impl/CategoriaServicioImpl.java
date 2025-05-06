@@ -21,7 +21,7 @@ public class CategoriaServicioImpl implements CategoriaServicio {
 	@Override
 	@Transactional(readOnly = true)
 	public List<Categoria> listarCategorias() {
-		return (List<Categoria>) categoriaRepositorio.findAll();
+		return  categoriaRepositorio.findAll();
 	}
 
 	//Agregado
@@ -37,6 +37,20 @@ public class CategoriaServicioImpl implements CategoriaServicio {
 		
 		return categoriaRepositorio.save(categoria);
 	}
+	
+	
+	@Override
+	public Categoria actualizarCategoria(CategoriaDTO categoriaActualizada) {
+		
+		
+		Categoria categoria = Categoria.builder()
+				.id(categoriaActualizada.getId())
+				.nombre_cat(categoriaActualizada.getNombre_cat())
+				.build();
+			
+		return categoriaRepositorio.save(categoria);
+	}
+	
 
 	//Eliminado
 	@Override
@@ -56,5 +70,7 @@ public class CategoriaServicioImpl implements CategoriaServicio {
 		// TODO Auto-generated method stub
 		return categoriaRepositorio.existsById(id);
 	}
+
+	
 
 }

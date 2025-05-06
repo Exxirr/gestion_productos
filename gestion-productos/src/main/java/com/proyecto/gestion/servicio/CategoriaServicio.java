@@ -14,7 +14,12 @@ public interface CategoriaServicio {
 	Categoria agregarCategoria(CategoriaDTO categoriaNueva);
 	
 	
+	//Buscar por Id
 	Categoria categoriaPorId(Integer id);
+	
+	//Actualizar
+	Categoria actualizarCategoria(CategoriaDTO categoriaActualizada);
+	
 	
 	
 	//Eliminar
