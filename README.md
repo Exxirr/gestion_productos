@@ -1,44 +1,81 @@
-Mini Proyecto: Gestión de Productos y Categorías con Angular y Spring Boot
+# 🛒 Sistema de Gestión de Productos
 
-Descripción:
-Este proyecto tiene como objetivo consolidar mis conocimientos en el desarrollo de aplicaciones web utilizando Angular para el frontend y Spring Boot para el backend, creando una aplicación funcional de gestión de productos y categorías.
+Este es un proyecto backend desarrollado con **Java + Spring Boot**, que permite gestionar productos y categorías. El sistema cuenta con endpoints RESTful, validaciones, manejo de errores global y arquitectura por capas.
 
-La aplicación permite al usuario realizar operaciones CRUD (Crear, Leer, Actualizar, Eliminar) tanto para productos como para categorías, con una API RESTful para la interacción entre el frontend y el backend. A lo largo del proyecto, he trabajado en todas las capas de la aplicación, desde la interfaz de usuario hasta la persistencia de datos, utilizando tecnologías modernas y buenas prácticas de desarrollo.
+---
 
-Frontend:
-Desarrollado con Angular (v17), utilizando módulos, componentes, servicios, y formularios para gestionar la interacción del usuario con la API. La interfaz está optimizada para una experiencia de usuario intuitiva, y utiliza Bootstrap para un diseño limpio y adaptable.
+## 🧑‍💻 Tecnologías usadas
 
-Backend:
-Construido con Spring Boot (v2.x), implementando una API RESTful que permite la gestión de productos y categorías. La API maneja validaciones de datos, manejo de excepciones y realiza la persistencia de información utilizando Spring Data JPA y MySQL como sistema de base de datos.
+- Java 17
+- Spring Boot 3.x
+- Spring Data JPA
+- MySQL
+- Lombok
+- Maven
+- DTOs y Builder Pattern
+- Validaciones con `jakarta.validation`
+- Manejo global de excepciones (`@RestControllerAdvice`)
+- ResponseEntity personalizado
 
-Características del Proyecto:
+---
 
-CRUD completo para productos y categorías, permitiendo realizar operaciones de creación, actualización, eliminación y consulta.
+## 📦 Funcionalidades principales
 
-Validaciones y manejo de excepciones en el backend para asegurar la integridad de los datos.
+### Productos:
+- Crear producto
+- Listar todos los productos
+- Buscar producto por ID
+- Actualizar producto
+- Eliminar producto
+- Buscar productos por nombre
 
-Interacción entre el frontend y el backend utilizando servicios HTTP en Angular.
+### Categorías:
+- Crear categoría
+- Listar todas las categorías
+- Buscar categoría por ID
+- Actualizar categoría
+- Eliminar categoría
 
-Diseño responsive y limpio utilizando Bootstrap.
+---
 
-Tecnologías Utilizadas:
+## 🧪 Validaciones y errores
 
-Frontend:
+- Uso de anotaciones como `@NotBlank`, `@Size`, `@DecimalMin`, etc.
+- Manejo global de excepciones:
+  - `MethodArgumentNotValidException`
+  - `ResourceNotFoundException`
+  - `BadRequestException`
+  - Otros errores generales
 
-Angular (v17)
+---
 
-TypeScript
+## 🧰 Cómo ejecutar el proyecto
 
-HTML y CSS (diseño y estilo)
+### 🔧 Requisitos
+- Java 17+
+- Maven
+- MySQL Server
 
-Bootstrap (framework de diseño)
+### 🔌 Configuración de base de datos
 
-Backend:
+Asegúrate de tener creada una base de datos `gestion_productos` en MySQL. Luego configura `application.properties`:
 
-Spring Boot (v2.x)
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/gestion_productos
+spring.datasource.username=tu_usuario
+spring.datasource.password=tu_contraseña
+spring.jpa.hibernate.ddl-auto=update
 
-Spring Data JPA
 
-MySQL (base de datos)
+🧪 Próximas mejoras
+ Autenticación con Spring Security + JWT
 
-Swagger (para documentación de la API)
+ Pruebas unitarias con JUnit + Mockito
+
+ Documentación Swagger
+
+ Despliegue en la nube (Render o Railway)
+
+📫 Contacto
+Proyecto desarrollado por Exxirr
+
