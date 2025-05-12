@@ -4,9 +4,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.proyecto.gestion.exception.BadRequestException;
+import com.proyecto.gestion.exception.ResourceNotFoundException;
 import com.proyecto.gestion.model.dto.*;
 import com.proyecto.gestion.model.entidad.Categoria;
 import com.proyecto.gestion.model.entidad.Producto;
+import com.proyecto.gestion.model.payload.ApiResponse;
 import com.proyecto.gestion.model.payload.MensajeResponse;
 import com.proyecto.gestion.servicio.CategoriaServicio;
 import com.proyecto.gestion.servicio.ProductoServicio;
@@ -46,7 +49,15 @@ public class ProductoControlador {
 	public List<ProductoDTO> todosProductos(  ) {
 		
 		List<Producto> productos =  productoServicio.listarProductos();
-	
+		
+		
+		if(productos == null || productos.isEmpty()) {
+			
+			throw new ResourceNotFoundException("producto");
+			
+		}
+		
+
 		return productos.stream().map(producto -> ProductoDTO.builder()
 				.id(producto.getId())
 				.nombre_prod(producto.getNombre_prod())
@@ -65,11 +76,10 @@ public class ProductoControlador {
 		
 		
 		if(!productoServicio.existePorId(id)) {
-			return new ResponseEntity<>(MensajeResponse.builder()
-					.mensaje("El producto con ID " + id + " no se encuentra en la Base de Datos")
-					.object(null)
-					.build(),
-					HttpStatus.NOT_FOUND);		
+			
+			throw new ResourceNotFoundException("producto", "id", id);
+			
+			
 		}
 		
 		Producto producto =  productoServicio.buscarProductoPorId(id);
@@ -128,11 +138,7 @@ public class ProductoControlador {
 	
 			}catch(DataAccessException exDt) {
 				
-				return new ResponseEntity<>(MensajeResponse.builder()
-						.mensaje(exDt.getMessage())
-						.object(null)
-						.build(), 
-						HttpStatus.INTERNAL_SERVER_ERROR);		
+				return new ResponseEntity<>(new ApiResponse("Error al crear producto", "/producto"), HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		}
 	
@@ -149,12 +155,14 @@ public class ProductoControlador {
 		Categoria categoria = null;
 		
 		try {
-			
-			 categoria = categoriaServicio.categoriaPorId(productoActualizado.getIdCategoria()); 
-			
-			 productoUpdate = productoServicio.actualizarProducto(productoActualizado);
-			
+				
 			if(productoServicio.existePorId(id) || categoriaServicio.existePorId(productoActualizado.getIdCategoria())) {
+				
+				
+				 categoria = categoriaServicio.categoriaPorId(productoActualizado.getIdCategoria()); 
+					
+				 productoUpdate = productoServicio.actualizarProducto(productoActualizado);
+				
 				
 				Producto producto =  Producto.builder()
 						.id(productoUpdate.getId())
@@ -182,11 +190,7 @@ public class ProductoControlador {
 			
 		}catch(DataAccessException exDt) {
 			
-			return new ResponseEntity<>(MensajeResponse.builder()
-					.mensaje(exDt.getMessage())
-					.object(null)
-					.build(), 
-					HttpStatus.INTERNAL_SERVER_ERROR);		
+			return new ResponseEntity<>(new ApiResponse("Eror al actualizar Producto", "/producto{id}"), HttpStatus.INTERNAL_SERVER_ERROR);	
 		}
 	}
 	
@@ -220,12 +224,7 @@ public class ProductoControlador {
 		}catch(DataAccessException exDt) {
 			
 			
-			
-			return new ResponseEntity<>(MensajeResponse.builder()
-					.mensaje(exDt.getMessage())
-					.object(null)
-					.build(), 
-					HttpStatus.INTERNAL_SERVER_ERROR);	
+			return new ResponseEntity<>(new ApiResponse("Eror al eliminar Empleado", "/producto{id}"), HttpStatus.INTERNAL_SERVER_ERROR);	
 		}	
 	}
 }

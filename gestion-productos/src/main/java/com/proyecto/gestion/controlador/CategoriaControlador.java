@@ -17,9 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.proyecto.gestion.model.dto.CategoriaDTO;
 import com.proyecto.gestion.model.entidad.Categoria;
+import com.proyecto.gestion.model.payload.ApiResponse;
 import com.proyecto.gestion.model.payload.MensajeResponse;
 import com.proyecto.gestion.servicio.CategoriaServicio;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 
@@ -81,7 +83,7 @@ public class CategoriaControlador {
 
 	
 	@PostMapping("categoria")
-	public ResponseEntity<?> agregarCategoria(@RequestBody CategoriaDTO categoriaDto) {
+	public ResponseEntity<?> agregarCategoria( @RequestBody @Valid CategoriaDTO categoriaDto) {
 		
 		
 		Categoria categoria = null;
@@ -105,11 +107,7 @@ public class CategoriaControlador {
 			
 		}catch(DataAccessException exDt) {
 		
-			return new ResponseEntity<>(MensajeResponse.builder()
-					.mensaje(exDt.getMessage())
-					.object(null)
-					.build(), 
-					HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(new ApiResponse("Eror al crear Categoria", "/categoria"), HttpStatus.INTERNAL_SERVER_ERROR);	
 			
 		}	
 	}
@@ -124,11 +122,10 @@ public class CategoriaControlador {
 		
 		try {
 		
-			
-			categoriaUpdate = categoriaServicio.actualizarCategoria(categoriaDto);
-			
-		
 				if(categoriaServicio.existePorId(id)) {
+					
+					categoriaDto.setId(id);
+					categoriaUpdate = categoriaServicio.actualizarCategoria(categoriaDto);
 					
 					
 					Categoria categoria = Categoria.builder()
@@ -137,7 +134,7 @@ public class CategoriaControlador {
 							.build();
 					
 					return new ResponseEntity<>(MensajeResponse.builder()
-							.mensaje("Producto Actualizado correctamente")
+							.mensaje("Categoria actualizada correctamente")
 							.object(categoria)
 							.build(), 
 			
@@ -153,11 +150,7 @@ public class CategoriaControlador {
 			
 		}catch(DataAccessException exDt) {
 		
-			return new ResponseEntity<>(MensajeResponse.builder()
-					.mensaje(exDt.getMessage())
-					.object(null)
-					.build(), 
-					HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(new ApiResponse("Eror al actualizar Categoria", "/categoria{id}"), HttpStatus.INTERNAL_SERVER_ERROR);	
 			
 		}	
 	}
@@ -190,11 +183,7 @@ public class CategoriaControlador {
 		}catch(DataAccessException exDt) {
 			
 			
-			return new ResponseEntity<>(MensajeResponse.builder()
-					.mensaje(exDt.getMessage())
-					.object(null)
-					.build(), 
-					HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(new ApiResponse("Eror al eliminar Categoria", "/categoria{id}"), HttpStatus.INTERNAL_SERVER_ERROR);	
 		
 		}
 	}

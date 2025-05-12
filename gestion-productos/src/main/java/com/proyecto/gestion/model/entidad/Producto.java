@@ -1,7 +1,7 @@
 package com.proyecto.gestion.model.entidad;
 
 import java.io.Serializable;
-
+import java.math.BigDecimal;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -12,6 +12,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -35,14 +41,20 @@ public class Producto implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	
 	private Integer id;
+	
 	
 	private String nombre_prod;
 	
-	private Double precio_unitario;
 	
+	
+	private BigDecimal precio_unitario;
+	
+
 	private Integer cantidad;
 	
+
 	@ManyToOne
 	@JoinColumn(
 				name = "categoria_id"
