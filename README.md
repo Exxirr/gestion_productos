@@ -72,8 +72,6 @@ spring.jpa.hibernate.ddl-auto=update
 
  Pruebas unitarias con JUnit + Mockito
 
- Documentación Swagger
-
  Despliegue en la nube (Render o Railway)
 
 📫 Contacto
